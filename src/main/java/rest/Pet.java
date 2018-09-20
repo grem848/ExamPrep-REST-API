@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import entity.PetDTO;
 import facade.Facade;
 import javax.persistence.Persistence;
 import javax.ws.rs.core.Context;
@@ -35,6 +36,28 @@ public class Pet
     {
         String json = gson.toJson(f.getAllPets());
 
+        return Response.ok(json).build();
+    }
+
+    @Path("petcount")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllPetsAmountJson()
+    {
+        String json = gson.toJson(f.getTotalAmountOfPets());
+
+        return Response.status(Response.Status.ACCEPTED).entity("{\"petCount\":" + "\"" + json + "\"}").build();
+
+    }
+
+    @Path("petlist")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllPetsInfoJson()
+    {
+        String json = gson.toJson(f.getAllPetsInfo());
+        
+        
         return Response.ok(json).build();
     }
 

@@ -153,7 +153,7 @@ public class Owner implements Serializable
     @Override
     public String toString()
     {
-        return "entity.Owner[ id=" + id + " ]";
+        return "[Owner id:" + id + ", Name:" + firstName + " " + lastName + " ]";
     }
     
 }

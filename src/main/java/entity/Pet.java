@@ -188,7 +188,7 @@ public class Pet implements Serializable
     @Override
     public String toString()
     {
-        return "entity.Pet[ id=" + id + " ]";
+        return "[Pet id:" + id + ", name: " + name + " ]";
     }
     
 }
