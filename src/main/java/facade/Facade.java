@@ -2,6 +2,7 @@ package facade;
 
 import entity.Pet;
 import entity.PetDTO;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,7 +34,7 @@ public class Facade
             em.getTransaction().begin();
             TypedQuery<Pet> qt = em.createQuery("SELECT NEW entity.Pet(p.id, p.name, p.birth, p.species) from Pet p", Pet.class);
             pets = qt.getResultList();
-            
+
             em.getTransaction().commit();
             return pets;
         } finally
@@ -41,6 +42,7 @@ public class Facade
             em.close();
         }
     }
+
     public List<PetDTO> getAllPetsInfo()
     {
         EntityManager em = emf.createEntityManager();
@@ -58,30 +60,8 @@ public class Facade
             em.close();
         }
     }
-//        public List<PersonDTO> getPersons()
-//    {
-//        EntityManager em = emf.createEntityManager();
-//
-//        List<PersonDTO> persons = null;
-//        
-//        try
-//        {
-//            em.getTransaction().begin();
-////            persons = em.createQuery("Select p from Person p").getResultList();
-//            //TypedQuery<PersonDTO> qt = em.createQuery("SELECT NEW entity.PersonDTO(p.firstName, p.lastName, p.phoneNumber) from Person p", PersonDTO.class);
-//            //persons = qt.getResultList();
-//            persons = em.createQuery("SELECT NEW entity.PersonDTO(p.firstName, p.lastName, p.phoneNumber) from Person p", PersonDTO.class).getResultList();
-//                    
-//            em.getTransaction().commit();
-//            return persons;
-//        }
-//        finally
-//        {
-//            em.close();
-//        }
-//    }
-    
-        public long getTotalAmountOfPets()
+
+    public long getTotalAmountOfPets()
     {
         EntityManager em = getEntityManager();
 
@@ -91,6 +71,44 @@ public class Facade
         return result;
 
     }
-    
-    
+
+    public List<Pet> getAllLivingPets()
+    {
+        EntityManager em = emf.createEntityManager();
+
+        List<Pet> pets = null;
+        try
+        {
+            em.getTransaction().begin();
+            TypedQuery<Pet> qt = em.createQuery("SELECT NEW entity.Pet(p.id, p.name, p.birth, p.species) from Pet p where p.death IS NULL", Pet.class);
+            pets = qt.getResultList();
+
+            em.getTransaction().commit();
+            return pets;
+        } finally
+        {
+            em.close();
+        }
+    }
+
+    public List<Pet> getAllPetsWithEventsOnGivenDay(Date date)
+    {
+        EntityManager em = emf.createEntityManager();
+
+        List<Pet> pets = null;
+        try
+        {
+            em.getTransaction().begin();
+            TypedQuery<Pet> qt = em.createQuery("SELECT p.pet.name from Event p where p.date = :date", Pet.class);
+            qt.setParameter("date", date);
+            pets = qt.getResultList();
+
+            em.getTransaction().commit();
+            return pets;
+        } finally
+        {
+            em.close();
+        }
+    }
+
 }
