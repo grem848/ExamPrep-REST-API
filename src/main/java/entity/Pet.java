@@ -33,14 +33,14 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "pet")
 @NamedQueries(
-{
-    @NamedQuery(name = "Pet.findAll", query = "SELECT p FROM Pet p")
-    , @NamedQuery(name = "Pet.findById", query = "SELECT p FROM Pet p WHERE p.id = :id")
-    , @NamedQuery(name = "Pet.findByName", query = "SELECT p FROM Pet p WHERE p.name = :name")
-    , @NamedQuery(name = "Pet.findByBirth", query = "SELECT p FROM Pet p WHERE p.birth = :birth")
-    , @NamedQuery(name = "Pet.findBySpecies", query = "SELECT p FROM Pet p WHERE p.species = :species")
-    , @NamedQuery(name = "Pet.findByDeath", query = "SELECT p FROM Pet p WHERE p.death = :death")
-})
+        {
+            @NamedQuery(name = "Pet.findAll", query = "SELECT p FROM Pet p")
+            , @NamedQuery(name = "Pet.findById", query = "SELECT p FROM Pet p WHERE p.id = :id")
+            , @NamedQuery(name = "Pet.findByName", query = "SELECT p FROM Pet p WHERE p.name = :name")
+            , @NamedQuery(name = "Pet.findByBirth", query = "SELECT p FROM Pet p WHERE p.birth = :birth")
+            , @NamedQuery(name = "Pet.findBySpecies", query = "SELECT p FROM Pet p WHERE p.species = :species")
+            , @NamedQuery(name = "Pet.findByDeath", query = "SELECT p FROM Pet p WHERE p.death = :death")
+        })
 public class Pet implements Serializable
 {
 
@@ -161,6 +161,11 @@ public class Pet implements Serializable
         this.owner = owner;
     }
 
+    public void addEvent(Event event)
+    {
+        this.eventCollection.add(event);
+    }
+
     @Override
     public int hashCode()
     {
@@ -190,5 +195,5 @@ public class Pet implements Serializable
     {
         return "[Pet id:" + id + ", name: " + name + " ]";
     }
-    
+
 }

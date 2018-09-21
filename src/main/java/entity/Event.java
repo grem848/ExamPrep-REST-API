@@ -79,6 +79,13 @@ public class Event implements Serializable
         this.date = date;
     }
 
+    public Event(String event, String remark, Date date)
+    {
+        this.event = event;
+        this.remark = remark;
+        this.date = date;
+    }
+    
     public Integer getId()
     {
         return id;

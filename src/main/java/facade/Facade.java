@@ -8,6 +8,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 public class Facade
 {
@@ -37,6 +42,28 @@ public class Facade
 
             em.getTransaction().commit();
             return pets;
+        } finally
+        {
+            em.close();
+        }
+    }
+
+    public Pet getPet(Pet pet)
+    {
+        EntityManager em = emf.createEntityManager();
+
+        Pet p = null;
+
+        try
+        {
+            em.getTransaction().begin();
+            TypedQuery<Pet> query = em.createNamedQuery("Pet.findById", Pet.class);
+            query.setParameter("id", pet.getId());
+
+            p = query.getSingleResult();
+
+            em.getTransaction().commit();
+            return p;
         } finally
         {
             em.close();
@@ -105,6 +132,29 @@ public class Facade
 
             em.getTransaction().commit();
             return pets;
+        } finally
+        {
+            em.close();
+        }
+    }
+
+    public Pet editPet(Pet pet)
+    {
+        EntityManager em = emf.createEntityManager();
+
+        try
+        {
+            em.getTransaction().begin();
+            Query query = em.createQuery("select p from Pet p where p.id = :id", Pet.class);
+            query.setParameter("id", pet.getId());
+            Pet p = (Pet) query.getSingleResult();
+            if (p != null)
+            {
+                p = pet;
+                em.merge(p);
+            }
+            em.getTransaction().commit();
+            return p;
         } finally
         {
             em.close();

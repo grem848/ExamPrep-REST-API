@@ -2,6 +2,8 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import entity.Event;
+import entity.Pet;
 import facade.Facade;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,11 +17,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
+import static javax.ws.rs.client.Entity.json;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("pet")
-public class Pet
+public class RESTPet
 {
 
     @Context
@@ -28,7 +31,7 @@ public class Pet
     Gson gson;
     Facade f = new Facade(Persistence.createEntityManagerFactory("pu"));
 
-    public Pet()
+    public RESTPet()
     {
         gson = new GsonBuilder().setPrettyPrinting().create();
     }
@@ -89,13 +92,57 @@ public class Pet
 
         Date test = new Date(ldate);
         System.out.println(test.toString());
-        
+
         return Response.ok(json2).build();
     }
 
+    @Path("editpet")
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content)
+    @Consumes("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editPetJson(String json) // {"id":"1", "name":"Heinrich", "birth":"2014-05-10", "species":"Dog"}
     {
+
+        Pet pet = gson.fromJson(json, Pet.class);
+        try
+        {
+            f.editPet(pet);
+
+            return Response.ok().entity(json).build();
+
+        } catch (Exception e)
+        {
+            System.out.println(e);
+            return Response.status(Response.Status.NOT_FOUND).entity("{\"status\":\"PET NOT FOUND\"}").build();
+        }
+    }
+
+    @Path("addevent/{id}")
+    @PUT
+    @Consumes("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addEventJson(String json, @PathParam("id") int id) // {"event":"Check up", "remark":"Standard Check up", "date":"2014-02-10"}
+    {
+
+        Pet pet = new Pet();
+        pet.setId(id);
+        Event event = gson.fromJson(json, Event.class);
+        System.out.println(json);
+        try
+        {
+            f.getPet(pet);
+            pet = f.getPet(pet);
+            event.setPet(pet);
+            pet.addEvent(event);
+
+            f.editPet(pet);
+
+            return Response.ok().entity(json).build();
+
+        } catch (Exception e)
+        {
+            System.out.println(e);
+            return Response.status(Response.Status.NOT_FOUND).entity("{\"status\":\"PET NOT FOUND\"}").build();
+        }
     }
 }
