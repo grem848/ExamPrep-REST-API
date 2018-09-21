@@ -12,12 +12,12 @@ import javax.persistence.Persistence;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
-import static javax.ws.rs.client.Entity.json;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -79,7 +79,7 @@ public class RESTPet
     @Path("peteventday/{year}-{month}-{date}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllPetsWithEventsOnGivenDayJson(@PathParam("year") String year, @PathParam("month") String month, @PathParam("date") String date) throws ParseException
+    public Response getAllPetsWithEventsOnGivenDayJson(@DefaultValue("1970") @PathParam("year") String year,@DefaultValue("01") @PathParam("month") String month,@DefaultValue("01") @PathParam("date") String date) throws ParseException
     {
         String string_date = date + "-" + month + "-" + year;
 
