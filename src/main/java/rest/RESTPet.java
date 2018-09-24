@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import converter.JSONConverter;
 import entity.Event;
 import entity.Pet;
 import facade.Facade;
@@ -62,6 +63,8 @@ public class RESTPet
     public Response getAllPetsInfoJson()
     {
         String json = gson.toJson(f.getAllPetsInfo());
+        
+//        String json = JSONConverter.getJSONFromPets(f.getAllPetsInfo());
 
         return Response.ok(json).build();
     }
